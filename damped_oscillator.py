@@ -3,11 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp 
 
-# Introduce spring, mass, and damping coefficients
+# Introduce mass and spring coefficients
 m,k = 1,4 
-zeta = 0.2 
-c = 2*zeta*np.sqrt(k*m)
-print(c)
 
 # Function
 def f(t, y, c):
@@ -23,11 +20,17 @@ t_eval = np.linspace(0, 10, 500)
 x0, v0 = 1,0
 y0 = [x0,v0]
 
-#Compute ivp
-sol = solve_ivp(f, (0,10),y0, t_eval=t_eval, args=(c,))
+zetas = [0.2, 1.0, 2.0]
+for z in zetas:
+    c = 2*z*np.sqrt(k*m)
+    sol = solve_ivp(f, (0,10),y0, t_eval=t_eval, args=(c,))
+    plt.plot(sol.t, sol.y[0],label = f"zeta = {z}")
 
-#Plot
-plt.plot(sol.t, sol.y[0])
+plt.xlabel('time (s)')
+plt.ylabel('x (m)')
+plt.title('Free Response for Three Damping Ratios')
+plt.legend()
+plt.grid(True)
 plt.show()
 
 

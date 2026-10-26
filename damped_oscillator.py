@@ -31,9 +31,14 @@ plt.ylabel('x (m)')
 plt.title('Free Response for Three Damping Ratios')
 plt.legend()
 plt.grid(True)
+
+#Verify zeta = 0.2 against the exact solution
+z = 0.2
+c = 2*z*np.sqrt(k*m)
+sol_check = solve_ivp(f, (0,10),y0, t_eval=t_eval, args=(c,), rtol=1e-8, atol=1e-10)
+w_n = np.sqrt(k/m)
+w_d = w_n*np.sqrt(1 - z**2)
+x_exact = np.exp(-z*w_n*sol_check.t)*(np.cos(w_d*sol_check.t)+((z*w_n)/(w_d)*np.sin(w_d*sol_check.t)))
+err = np.max(np.abs(sol_check.y[0]-x_exact))
+print(f"max_error = {err:.2e}")
 plt.show()
-
-
-
-
-
